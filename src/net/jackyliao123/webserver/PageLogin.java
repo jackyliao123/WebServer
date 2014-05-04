@@ -46,7 +46,7 @@ public class PageLogin extends Webpage{
 					}
 					else if(!pass.equals(confirm)){
 						successful = false;
-						failText = "Passwords does not match";
+						failText = "Passwords do not match";
 					}
 					else if(pass.length() < 6){
 						successful = false;
@@ -99,8 +99,62 @@ public class PageLogin extends Webpage{
 								"</table>" +
 								"</form>"
 								), address).getBytes());
-				}
-				else{
+				} else if(request.startsWith("/changepass")){
+					User user = manager.getUserFromAddress(address);
+					if (user != null) {
+						String pass = userArray[0].substring(9);
+						String confirmPass = userArray[1].substring(8);
+						String oldPass = userArray[2].substring(8);
+						String failText = "";
+						boolean successful = true;
+						if (!pass.equals(confirmPass)) {
+							successful = false;
+							failText = "Passwords do not match";
+						} else if (pass.length() < 6) {
+							successful = false;
+							failText = "Passwords must be at least 6 characters in length";
+						} else if (manager.checkUserPassword(user.username, oldPass) == null) {
+							successful = false;
+							failText = "Old password does not match";
+						}
+						if (successful) {
+							manager.userChangePassword(user.username, pass);
+							o.write(getPageCode("Change Password Successful", null, "<meta http-equiv=\"refresh\" content=\"5; url=/\" />",
+									getPageContentCode(
+									"<div style=\"text-align:center\">" +
+									"<h2 stlye=\"color:008000;\">Change Password Successful</h2><br>" + 
+									"Welcome " + user.username + "<br>" +
+									"You will be redirected in 5 seconds<br>" +
+									"<a href=\"/\">Not redirecting? Click here</a>" +
+									"</div>"
+									), address).getBytes());
+						} else
+							o.write(getPageCode("Change Password Failed", null, "", 
+									getPageContentCode(
+									"<h2 style=\"text-align:center\">Account</h2></div>" +
+									"<h4 style=\"color:ff0000; text-align:center; margin:0;\">" + failText + "</h4><br>" +
+									"<form style=\"padding-left:40%\" name=\"changepass\" action=\"/login/changepass\" method=\"post\">" +
+								    "<table> <tr> <td>" +
+									"<label for=\"newpass\">New Password: </label>" +
+									"</td> <td>" +
+									"<input id=\"newpass\" type=\"password\" name=\"password\">" +
+								    "</td> </tr>" +
+									"<tr> <td>" +
+								    "<label for=\"confirm\">Confirm: </label>" +
+								    "</td> <td>" +
+									"<input id=\"confirm\" type=\"password\" name=\"confirm\">" +
+								    "</td> </tr>" +
+									"<tr> <td>" +
+								    "<label for=\"oldpass\">Old password: </label>" +
+									"</td> <td>" +
+								    "<input id=\"oldpass\" type=\"password\" name=\"oldpass\">" +
+								    "</td> </tr>" +
+									"<tr> <td>" +
+								    "<input type=\"submit\" value=\"Change Password\"/>" +
+									"</td> </tr> </table> </form>"
+									), address).getBytes());
+					}
+				} else{
 					String user = userArray[0].substring(9);
 					String pass = userArray[1].substring(9);
 					
@@ -195,7 +249,26 @@ public class PageLogin extends Webpage{
 	}
 	private void writeAccountManagementCode(OutputStream o, InetAddress address) throws IOException {
 		o.write(getPageCode("Account Management", null, "", getPageContentCode(
-				"<h2 style=\"text-align:center\">Account</h2></div>"
+				"<h2 style=\"text-align:center\">Account</h2></div>" +
+				"<form style=\"padding-left:40%\" name=\"changepass\" action=\"/login/changepass\" method=\"post\">" +
+			    "<table> <tr> <td>" +
+				"<label for=\"newpass\">New Password: </label>" +
+			    "</td> <td>" +
+				"<input id=\"newpass\" type=\"password\" name=\"password\">" +
+			    "</td> </tr>" +
+				"<tr> <td>" +
+			    "<label for=\"confirm\">Confirm: </label>" +
+			    "</td> <td>" +
+				"<input id=\"confirm\" type=\"password\" name=\"confirm\">" +
+			    "</td> </tr>" +
+				"<tr> <td>" +
+			    "<label for=\"oldpass\">Old password: </label>" +
+				"</td> <td>" +
+			    "<input id=\"oldpass\" type=\"password\" name=\"oldpass\">" +
+			    "</td> </tr>" +
+				"<tr> <td>" +
+			    "<input type=\"submit\" value=\"Change Password\"/>" +
+				"</td> </tr> </table> </form>" 
 				), address).getBytes());
 	}
 	private void writeLoginPageCode(OutputStream o, InetAddress address) throws IOException {
