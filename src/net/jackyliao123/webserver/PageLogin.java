@@ -57,12 +57,14 @@ public class PageLogin extends Webpage{
 						manager.registerUser(user, email, pass);
 						manager.loginUser(user, pass, address);
 						o.write(getPageCode("Registration Successful", null, "<meta http-equiv=\"refresh\" content=\"5; url=/\" />",
+								getPageContentCode(
 								"<div style=\"text-align:center\">" +
 								"<h2 stlye=\"color:008000;\">Registration Successful</h2><br>" + 
 								"Welcome " + user + "<br>" +
 								"You will be redirected in 5 seconds<br>" +
 								"<a href=\"/\">Not redirecting? Click here</a>" +
-								"</div>", address).getBytes());
+								"</div>"
+								), address).getBytes());
 					}
 					else
 						o.write(getPageCode("Registration failed", null, "",
