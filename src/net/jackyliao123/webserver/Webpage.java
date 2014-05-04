@@ -61,4 +61,7 @@ public abstract class Webpage{
 				"  </body>\r\n" +
 				"</html>\r\n";
 	}
+	public static String getPageContentCode(String body) {
+		return "<div id=\"indent\">" + body + "</div>";
+	}
 }

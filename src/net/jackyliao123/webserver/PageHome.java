@@ -9,7 +9,12 @@ public class PageHome extends Webpage{
 	}
 	public void writePageContent(ResponseParams param, String request, OutputStream o, InetAddress address){
 		try {
-			o.write(getPageCode("Home", "/css/home.css", "", "<center><a href=\"/file/\"><font size=\"6\">File System</font></a></center>", address).getBytes());
+			o.write(getPageCode("Home", "/css/home.css", "", 
+					getPageContentCode(
+					"<a href=\"/file/\">" +
+					"<h1 style=\"text-align:center\">File System</h2>" +
+					"</a>"
+					), address).getBytes());
 		}
 		catch (IOException e){
 		}

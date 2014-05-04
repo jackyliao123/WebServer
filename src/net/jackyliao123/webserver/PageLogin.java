@@ -1,7 +1,10 @@
 package net.jackyliao123.webserver;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.URLDecoder;
+
+import com.sun.org.apache.xalan.internal.xsltc.compiler.Pattern;
 
 public class PageLogin extends Webpage{
 	public String getPageName(){
@@ -38,6 +41,10 @@ public class PageLogin extends Webpage{
 						successful = false;
 						failText = "Email address already used";
 					}
+					else if(!java.util.regex.Pattern.compile(".+@.+\\.[a-z]+").matcher(email).matches()) {
+						successful = false;
+						failText = "Invalid email address!";
+					}
 					else if(!pass.equals(confirm)){
 						successful = false;
 						failText = "Passwords does not match";
@@ -50,83 +57,113 @@ public class PageLogin extends Webpage{
 					if(successful){
 						manager.registerUser(user, email, pass);
 						manager.loginUser(user, pass, address);
-						o.write(getPageCode("Registeration Successful", null, "<meta http-equiv=\"refresh\" content=\"5; url=/\" />\r\n",
-								"<center>\r\n" +
-								"<font size=\"6\" color=\"008000\">Registeration Successful</font><br>\r\n" + 
-								"Welcome " + user + "<br>\r\n" +
-								"You will be redirected in 5 seconds<br>\r\n" +
-								"<a href=\"/\">Not redirecting? Click here</a>\r\n" +
-								"</center>\r\n", address).getBytes());
+						o.write(getPageCode("Registration Successful", null, "<meta http-equiv=\"refresh\" content=\"5; url=/\" />",
+								"<div style=\"text-align:center\">" +
+								"<h2 stlye=\"color:008000;\">Registration Successful</h2><br>" + 
+								"Welcome " + user + "<br>" +
+								"You will be redirected in 5 seconds<br>" +
+								"<a href=\"/\">Not redirecting? Click here</a>" +
+								"</div>", address).getBytes());
 					}
 					else
-						o.write(getPageCode("Registeration failed", null, "",
-								"<center>\r\n" +
-								"<font size=\"6\" color=\"ff0000\">Registeration Failed</font>\r\n" + 
-								"<form name=\"login\" action=\"/login/register\" method=\"post\">\r\n" +
-								"Username: <input type=\"text\" name=\"username\" value=\"" + user + "\"><br>\r\n" +
-								"Email: <input type=\"text\" name=\"email\" value=\"" + email + "\"><br>\r\n" +
-								"Password: <input type=\"password\" name=\"password\"><br>\r\n" +
-								"Confirm Password: <input type=\"password\" name=\"confirm\"><br>\r\n" +
-								"<font color=\"ff0000\">" + failText + "</font><br>\r\n" +
-								"<input type=\"submit\" value=\"Register\"/>\r\n" +
-								"</form>\r\n" +
-								"</center>\r\n", address).getBytes());
+						o.write(getPageCode("Registration failed", null, "",
+								getPageContentCode(
+								"<h2 style=\"text-align:center\">Register</h2>" + 
+								"<form style=\"padding-left:40%\" name=\"login\" action=\"/login/register\" method=\"post\">" +
+								"Username: <input type=\"text\" name=\"username\">" +
+								"<br>" +
+								"Email: <input type=\"text\" name=\"email\">" +
+								"<br>" +
+								"Password: <input type=\"password\" name=\"password\">" +
+								"<br>" +
+								"Confirm Password: <input type=\"password\" name=\"confirm\">" +
+								"<br>" +
+								"<font color=\"ff0000\">" + failText + "</font><br>" +
+								"<input type=\"submit\" value=\"Register\"/>" +
+								"</form>"
+								), address).getBytes());
 				}
 				else{
 					String user = userArray[0].substring(9);
 					String pass = userArray[1].substring(9);
 					
-					if(manager.loginUser(user, pass, address)){
-						o.write(getPageCode("Login Successful", null, "<meta http-equiv=\"refresh\" content=\"5; url=/\" />\r\n",
-								"<center>\r\n" +
-								"<font size=\"6\" color=\"008000\">Login Successful</font><br>\r\n" + 
-								"Welcome " + user + "<br>\r\n" +
-								"You will be redirected in 5 seconds<br>\r\n" +
-								"<a href=\"/\">Not redirecting? Click here</a>\r\n" +
-								"</center>\r\n", address).getBytes());
-					}
-					else{
-						o.write(getPageCode("Login Failed", null, "",
-								"<center>\r\n" +
-								"<font size=\"6\" color=\"ff0000\">Login Failed</font>\r\n" + 
-								"<form name=\"login\" action=\"/login\" method=\"post\">\r\n" +
-								"Username: <input type=\"text\" name=\"username\" value=\"" + user + "\"><br>\r\n" +
-								"Password: <input type=\"password\" name=\"password\"><br>\r\n" +
-								"<font color=\"ff0000\">Invalid Username/Password combination</font><br>\r\n" +
-								"<input type=\"submit\" value=\"Login\"/>\r\n" +
-								"</form>\r\n" +
-								"</center>\r\n", address).getBytes());
-					}
+					writeLoginResponseCode(o, address, user, pass, manager.loginUser(user, pass, address));
 				}
 			}
-			else if(request.startsWith("/register")){
-				o.write(getPageCode("Register", null, "",
-						"<center>\r\n" +
-						"<font size=\"6\" color=\"000000\">Register</font>\r\n" + 
-						"<form name=\"login\" action=\"/login/register\" method=\"post\">\r\n" +
-						"Username: <input type=\"text\" name=\"username\"><br>\r\n" +
-						"Email: <input type=\"text\" name=\"email\"><br>\r\n" +
-						"Password: <input type=\"password\" name=\"password\"><br>\r\n" +
-						"Confirm Password: <input type=\"password\" name=\"confirm\">\r\n" +
-						"<br>\r\n" +
-						"<input type=\"submit\" value=\"Register\"/>\r\n" +
-						"</form>\r\n" +
-						"</center>\r\n", address).getBytes());
+			else if(request.startsWith("/register"))
+				writeRegisterCode(o, address);
+			else if (request.startsWith("/account")) {
+				User user = manager.getUserFromAddress(address);
+				if (user != null)
+					writeAccountManagementCode(o, address);
+				else
+					writeLoginPageCode(o, address);
 			}
-			else{
-				o.write(getPageCode("Login", null, "",
-						"<center>\r\n" +
-						"<font size=\"6\" color=\"000000\">Login</font>\r\n" + 
-						"<form name=\"login\" action=\"/login\" method=\"post\">\r\n" +
-						"Username: <input type=\"text\" name=\"username\"><br>\r\n" +
-						"Password: <input type=\"password\" name=\"password\">\r\n" +
-						"<br>\r\n" +
-						"<input type=\"submit\" value=\"Login\"/>\r\n" +
-						"</form>\r\n" +
-						"</center>\r\n", address).getBytes());
-			}
+			else
+				writeLoginPageCode(o, address);
 		}
 		catch (Exception e) {
 		}
+	}
+	private void writeLoginResponseCode(OutputStream o, InetAddress address, String user, String pass, boolean wasSuccessful) throws IOException {
+		if(wasSuccessful){
+			o.write(getPageCode("Login Successful", null, "<meta http-equiv=\"refresh\" content=\"5; url=/\" />",
+					getPageContentCode(
+					"<div style=\"text-align:center\">" +
+					"<h1 style=\"color:008000; margin:0px\">Login Successful</h1>" +
+					"<br>" + 
+					"Welcome " + user + "<br>" +
+					"You will be redirected in 5 seconds<br>" +
+					"<a href=\"/\">Not redirecting? Click here</a>" +
+					"</div>"
+					), address).getBytes());
+		}
+		else{
+			o.write(getPageCode("Login Failed", null, "",
+					getPageContentCode(
+					"<h2 style=\"text-align:center\">Login Failed</h2>" + 
+					"<form style=\"padding-left:40%\" name=\"login\" action=\"/login\" method=\"post\">" +
+					"Username: <input type=\"text\" name=\"username\" value=\"" + user + "\"><br>" +
+					"Password: <input type=\"password\" name=\"password\"><br>" +
+					"<h4 style=\"color:ff0000; margin-top:0px;\">Invalid Username/Password combination</font><br>" +
+					"<input type=\"submit\" value=\"Login\"/>" +
+					"</form>"
+					), address).getBytes());
+		}
+	}
+	private void writeRegisterCode(OutputStream o, InetAddress address) throws IOException {
+		o.write(getPageCode("Register", null, "",
+				getPageContentCode(
+				"<h2 style=\"text-align:center\">Register</h2>" + 
+				"<form style=\"padding-left:40%\" name=\"login\" action=\"/login/register\" method=\"post\">" +
+				"Username: <input type=\"text\" name=\"username\">" +
+				"<br>" +
+				"Email: <input type=\"text\" name=\"email\">" +
+				"<br>" +
+				"Password: <input type=\"password\" name=\"password\">" +
+				"<br>" +
+				"Confirm Password: <input type=\"password\" name=\"confirm\">" +
+				"<br>" +
+				"<input type=\"submit\" value=\"Register\"/>" +
+				"</form>"
+				), address).getBytes());
+	}
+	private void writeAccountManagementCode(OutputStream o, InetAddress address) throws IOException {
+		o.write(getPageCode("Account Management", null, "", getPageContentCode(
+				"<h2 style=\"text-align:center\">Account</h2></div>"
+				), address).getBytes());
+	}
+	private void writeLoginPageCode(OutputStream o, InetAddress address) throws IOException {
+		o.write(getPageCode("Login", null, "",
+				getPageContentCode(
+				"<h2 style=\"text-align:center\">Login</h2>" +
+				"<form style=\"padding-left:40%\" name=\"login\" action=\"/login\" method=\"post\">" +
+				"Username: <input type=\"text\" name=\"username\">" +
+				"<br>" +
+				"Password: <input type=\"password\" name=\"password\">" +
+				"<br>" +
+				"<input type=\"submit\" value=\"Login\"/>" +
+				"</form>"
+				), address).getBytes());
 	}
 }
