@@ -1,3 +1,4 @@
+package net.jackyliao123.webserver;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
