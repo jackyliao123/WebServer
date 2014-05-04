@@ -15,7 +15,7 @@ public class PageLogin extends Webpage{
 			if(request.startsWith("/logout")){
 				manager.userLogout(manager.getUserFromAddress(address));
 			}
-			if((boolean)param.getParam()[0]){
+			if((Boolean)param.getParam()[0]){
 				String userpass = URLDecoder.decode((String)param.getParam()[1], "UTF-8");
 				String[] userArray = userpass.split("&");
 				if(request.startsWith("/register")){
