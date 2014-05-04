@@ -47,9 +47,9 @@ public abstract class Webpage{
 		String loginInfo = "";
 		User user = WebServer.instance.manager.getUserFromAddress(address);
 		if(user != null)
-			loginInfo = "    <div id=\"header\"><p align=\"right\" id=\"spacing\">Logged in as: " + user.username + " <a href=\"/login/account\">Account</a> <a href=\"/login/logout/\">Logout</a></p></div>\r\n";
+			loginInfo = "    <div id=\"header\"><div align=\"right\" id=\"spacing\">Logged in as: " + user.username + " <a href=\"/login/account\">Account</a> <a href=\"/login/logout/\">Logout</a></div></div>\r\n";
 		else
-			loginInfo = "    <div id=\"header\"><p align=\"right\" id=\"spacing\"><a href=\"/login\">Login</a> <a href=\"/login/register\">Register</a></p></div>\r\n";
+			loginInfo = "    <div id=\"header\"><div align=\"right\" id=\"spacing\"><a href=\"/login\">Login</a> <a href=\"/login/register\">Register</a></div></div>\r\n";
 		return  "<html>\r\n" +
 				"  <head>\r\n" +
 				"    <title>" + title + "</title>\r\n" +

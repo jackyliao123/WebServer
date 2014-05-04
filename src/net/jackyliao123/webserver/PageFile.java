@@ -12,8 +12,10 @@ import sun.awt.shell.ShellFolder;
 public class PageFile extends Webpage{
 	public static File root = new File("files");
 	public PageFile(){
-		if(!root.exists())
+		if(!root.exists()) {
 			root = new File("./files");
+			root.mkdir();
+		}
 	}
 	public String getPageName(){
 		return "/file";
@@ -52,7 +54,7 @@ public class PageFile extends Webpage{
 						fils ++;
 					}
 				}
-				body += "</div><div id=\"footer\"><p id=\"spacing\">" + dirs + " folders, " + fils + " files</p></div>";
+				body += "</div><div id=\"footer\"><div id=\"spacing\">" + dirs + " folders, " + fils + " files</div></div>";
 				return new ResponseParams(getPageHeader("200 OK", "text/html", -1), new Object[]{getPageCode(req.equals("/") ? "File Server" : req.substring(1), null, "", body, address)});
 			}
 			catch(NullPointerException e){
