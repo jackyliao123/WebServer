@@ -1,3 +1,4 @@
+package net.jackyliao123.webserver;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,8 +12,10 @@ import sun.awt.shell.ShellFolder;
 public class PageFile extends Webpage{
 	public static File root = new File("files");
 	public PageFile(){
-		if(!root.exists())
+		if(!root.exists()) {
 			root = new File("./files");
+			root.mkdir();
+		}
 	}
 	public String getPageName(){
 		return "/file";
@@ -97,8 +100,8 @@ public class PageFile extends Webpage{
 			}
 			else if(data instanceof File){
 				FileInputStream finput = new FileInputStream((File)data);
-				long startByte = (long)param.getParam()[1];
-				long endByte = (long)param.getParam()[2];
+				long startByte = (Long)param.getParam()[1];
+				long endByte = (Long)param.getParam()[2];
 				finput.skip(startByte);
 				long bytesRead = 0;
 				int arraySize = (int)Math.min(2147483645L, endByte - startByte + 1);

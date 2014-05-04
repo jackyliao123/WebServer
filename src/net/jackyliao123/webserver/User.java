@@ -1,3 +1,4 @@
+package net.jackyliao123.webserver;
 import java.net.InetAddress;
 
 public class User {

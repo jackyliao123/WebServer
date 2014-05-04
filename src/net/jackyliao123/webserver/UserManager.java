@@ -1,8 +1,10 @@
+package net.jackyliao123.webserver;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -11,6 +13,18 @@ public class UserManager {
 	private final File file;
 	public final ArrayList<User> users;
 	public UserManager(File file){
+		if (!file.exists())
+			try {
+				file.createNewFile();
+				FileOutputStream out = new FileOutputStream(file);
+				out.write(0);
+				out.write(0);
+				out.write(0);
+				out.write(0);
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		this.file = file;
 		users = new ArrayList<User>();
 	}
