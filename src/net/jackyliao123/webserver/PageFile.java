@@ -26,10 +26,12 @@ public class PageFile extends Webpage{
 			f = new File(root, req.replaceFirst("/download", ""));
 		}
 		if(!f.exists()){
-			return new ResponseParams(getPageHeader("404 Not Found", "text/html", -1), "The specified file was not found");
+			String text = "The specified file was not found";
+			return new ResponseParams(getPageHeader("404 Not Found", "text/html", text.getBytes().length), text);
 		}
 		if(!f.getAbsolutePath().contains(root.getAbsolutePath())){
-			return new ResponseParams(getPageHeader("403 Forbidden", "text/html", -1), "You do not have permission to access this file");
+			String text = "You do not have permission to access this file";
+			return new ResponseParams(getPageHeader("403 Forbidden", "text/html", text.getBytes().length), text);
 		}
 		if(f.isDirectory()){
 			try{
@@ -55,13 +57,16 @@ public class PageFile extends Webpage{
 					}
 				}
 				body += "</div><div id=\"footer\"><div id=\"spacing\">" + dirs + " folders, " + fils + " files</div></div>";
-				return new ResponseParams(getPageHeader("200 OK", "text/html", -1), new Object[]{getPageCode(req.equals("/") ? "File Server" : req.substring(1), null, "", body, address)});
+				String text = getPageCode(req.equals("/") ? "File Server" : req.substring(1), null, "", body, address);
+				return new ResponseParams(getPageHeader("200 OK", "text/html", text.getBytes().length), new Object[]{text});
 			}
 			catch(NullPointerException e){
-				return new ResponseParams(getPageHeader("403 Forbidden", "text/html", -1), "You do not have permission to access this file");
+				String text = "You do not have permission to access this file";
+				return new ResponseParams(getPageHeader("403 Forbidden", "text/html", text.getBytes().length), text);
 			}
 			catch (FileNotFoundException e){
-				return new ResponseParams(getPageHeader("404 Not Found", "text/html", -1), "The specified file was not found");
+				String text = "The specified file was not found";
+				return new ResponseParams(getPageHeader("404 Not Found", "text/html", text.getBytes().length), text);
 			}
 		}
 		else{
