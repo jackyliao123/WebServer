@@ -69,18 +69,34 @@ public class PageLogin extends Webpage{
 					else
 						o.write(getPageCode("Registration failed", null, "",
 								getPageContentCode(
-								"<h2 style=\"text-align:center\">Register</h2>" + 
+								"<h2 style=\"text-align:center;\">Register</h2>" + 
+								"<h4 style=\"color:ff0000; text-align:center; margin:0;\">" + failText + "</h4><br>" +
 								"<form style=\"padding-left:40%\" name=\"login\" action=\"/login/register\" method=\"post\">" +
-								"Username: <input type=\"text\" name=\"username\">" +
-								"<br>" +
-								"Email: <input type=\"text\" name=\"email\">" +
-								"<br>" +
-								"Password: <input type=\"password\" name=\"password\">" +
-								"<br>" +
-								"Confirm Password: <input type=\"password\" name=\"confirm\">" +
-								"<br>" +
-								"<font color=\"ff0000\">" + failText + "</font><br>" +
+								"<table>" +
+								"<tr> <td>" +
+								"<label for=\"user\">Username: </label>" +
+								"</td> <td>" +
+								"<input id=\"user\" type=\"text\" name=\"username\">" +
+								"</td> </tr>" +
+								"<tr> <td>" +
+								"<label for=\"email\">Email: </label>" +
+								"</td> <td>" +
+								"<input id=\"email\" type=\"text\" name=\"email\">" +
+								"</td> </tr>" +
+								"<tr> <td>" +
+								"<label for=\"password\">Password: </label>" +
+								"</td> <td>" +
+								"<input id=\"password\" type=\"password\" name=\"password\">" +
+								"</td> </tr>" +
+								"<tr> <td>" +
+								"<label for=\"confirm\">Confirm Password: </label>" +
+								"</td> <td>" +
+								"<input id=\"confirm\" type=\"password\" name=\"confirm\">" +
+								"</td> </tr>" +
+								"<tr> <td>" +
 								"<input type=\"submit\" value=\"Register\"/>" +
+								"</td> </tr>" +
+								"</table>" +
 								"</form>"
 								), address).getBytes());
 				}
@@ -122,12 +138,24 @@ public class PageLogin extends Webpage{
 		else{
 			o.write(getPageCode("Login Failed", null, "",
 					getPageContentCode(
-					"<h2 style=\"text-align:center\">Login Failed</h2>" + 
+					"<h2 style=\"text-align:center\">Login</h2>" +
+					"<h4 style=\"text-align:center; color:ff0000; margin:0px;\">Invalid Username/Password combination</h4><br>" +
 					"<form style=\"padding-left:40%\" name=\"login\" action=\"/login\" method=\"post\">" +
-					"Username: <input type=\"text\" name=\"username\" value=\"" + user + "\"><br>" +
-					"Password: <input type=\"password\" name=\"password\"><br>" +
-					"<h4 style=\"color:ff0000; margin-top:0px;\">Invalid Username/Password combination</font><br>" +
+					"<table>" +
+					"<tr><td>" +
+					"<label for=\"user\">Username: </label>" +
+					"</td><td>" +
+					"<input id=\"user\" type=\"text\" name=\"username\">" +
+					"</td></tr>" +
+					"<tr><td>" +
+					"<label for=\"pass\">Password: </label>" +
+					"</td><td>" +
+					"<input type=\"password\" name=\"password\">" +
+					"</td></tr>" +
+					"<tr><td>" +
 					"<input type=\"submit\" value=\"Login\"/>" +
+					"</td></tr>" +
+					"</table>" +
 					"</form>"
 					), address).getBytes());
 		}
@@ -137,15 +165,31 @@ public class PageLogin extends Webpage{
 				getPageContentCode(
 				"<h2 style=\"text-align:center\">Register</h2>" + 
 				"<form style=\"padding-left:40%\" name=\"login\" action=\"/login/register\" method=\"post\">" +
-				"Username: <input type=\"text\" name=\"username\">" +
-				"<br>" +
-				"Email: <input type=\"text\" name=\"email\">" +
-				"<br>" +
-				"Password: <input type=\"password\" name=\"password\">" +
-				"<br>" +
-				"Confirm Password: <input type=\"password\" name=\"confirm\">" +
-				"<br>" +
+				"<table>" +
+				"<tr> <td>" +
+				"<label for=\"user\">Username: </label>" +
+				"</td> <td>" +
+				"<input id=\"user\" type=\"text\" name=\"username\">" +
+				"</td> </tr>" +
+				"<tr> <td>" +
+				"<label for=\"email\">Email: </label>" +
+				"</td> <td>" +
+				"<input id=\"email\" type=\"text\" name=\"email\">" +
+				"</td> </tr>" +
+				"<tr> <td>" +
+				"<label for=\"password\">Password: </label>" +
+				"</td> <td>" +
+				"<input id=\"password\" type=\"password\" name=\"password\">" +
+				"</td> </tr>" +
+				"<tr> <td>" +
+				"<label for=\"confirm\">Confirm Password: </label>" +
+				"</td> <td>" +
+				"<input id=\"confirm\" type=\"password\" name=\"confirm\">" +
+				"</td> </tr>" +
+				"<tr> <td>" +
 				"<input type=\"submit\" value=\"Register\"/>" +
+				"</td> </tr>" +
+				"</table>" +
 				"</form>"
 				), address).getBytes());
 	}
@@ -159,11 +203,21 @@ public class PageLogin extends Webpage{
 				getPageContentCode(
 				"<h2 style=\"text-align:center\">Login</h2>" +
 				"<form style=\"padding-left:40%\" name=\"login\" action=\"/login\" method=\"post\">" +
-				"Username: <input type=\"text\" name=\"username\">" +
-				"<br>" +
-				"Password: <input type=\"password\" name=\"password\">" +
-				"<br>" +
+				"<table>" +
+				"<tr><td>" +
+				"<label for=\"user\">Username: </label>" +
+				"</td><td>" +
+				"<input id=\"user\" type=\"text\" name=\"username\">" +
+				"</td></tr>" +
+				"<tr><td>" +
+				"<label for=\"pass\">Password: </label>" +
+				"</td><td>" +
+				"<input type=\"password\" name=\"password\">" +
+				"</td></tr>" +
+				"<tr><td>" +
 				"<input type=\"submit\" value=\"Login\"/>" +
+				"</td></tr>" +
+				"</table>" +
 				"</form>"
 				), address).getBytes());
 	}
