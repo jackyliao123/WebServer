@@ -4,8 +4,6 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.URLDecoder;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.Pattern;
-
 public class PageLogin extends Webpage{
 	public String getPageName(){
 		return "/login";
