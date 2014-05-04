@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.URLDecoder;
+import java.util.regex.Pattern;
 
 public class PageLogin extends Webpage{
 	public String getPageName(){
@@ -39,7 +40,7 @@ public class PageLogin extends Webpage{
 						successful = false;
 						failText = "Email address already used";
 					}
-					else if(!java.util.regex.Pattern.compile(".+@.+\\.[a-z]+").matcher(email).matches()) {
+					else if(!Pattern.compile(".+@.+\\.[a-z]+").matcher(email).matches()) {
 						successful = false;
 						failText = "Invalid email address!";
 					}
