@@ -12,7 +12,6 @@
 hs_err_pid*
 *.jks
 *.dat
-com/github/sarxos/webcam/*
 
 #################
 ## Eclipse
@@ -233,3 +232,4 @@ pip-log.txt
 *.filters
 
 files/
+rebel.xml

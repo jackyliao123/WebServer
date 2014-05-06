@@ -1,8 +1,8 @@
+package net.jackyliao123.webserver;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.OutputStream;
-import java.net.InetAddress;
 
 import javax.imageio.ImageIO;
 
@@ -15,7 +15,7 @@ public class PageIcon extends Webpage{
 	public String getContentType(String req){
 		return "image/png";
 	}
-	public void writePageContent(ResponseParams param, String request, OutputStream o, InetAddress address){
+	public void writePageContent(ResponseParams param, String request, OutputStream o, Cookie cookie){
 		try {
 			File f = new File(PageFile.root, request);
 			ShellFolder shellFolder = ShellFolder.getShellFolder(f);

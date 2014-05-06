@@ -1,8 +1,7 @@
-import java.io.DataInputStream;
+package net.jackyliao123.webserver;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 
 public class PageCSS extends Webpage{
 	private File cssRoot = new File("stylesheets");
@@ -18,7 +17,7 @@ public class PageCSS extends Webpage{
 		}
 		return -1;
 	}
-	public void writePageContent(ResponseParams param, String request, OutputStream o, InetAddress address) {
+	public void writePageContent(ResponseParams param, String request, OutputStream o, Cookie cookie) {
 		try{
 			if(request.startsWith("/")){
 				File f = new File(cssRoot, request.substring(1));

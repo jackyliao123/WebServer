@@ -1,18 +1,34 @@
+package net.jackyliao123.webserver;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.net.InetAddress;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class UserManager {
 	private final File file;
+	private final Random random;
 	public final ArrayList<User> users;
 	public UserManager(File file){
+		if (!file.exists())
+			try {
+				file.createNewFile();
+				FileOutputStream out = new FileOutputStream(file);
+				out.write(0);
+				out.write(0);
+				out.write(0);
+				out.write(0);
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		this.file = file;
 		users = new ArrayList<User>();
+		random = new Random();
 	}
 	public synchronized void updateUsers(){
 		for(int i = 0; i < users.size(); i ++){
@@ -59,10 +75,10 @@ public class UserManager {
 		}
 		return null;
 	}
-	public synchronized boolean loginUser(String username, String password, InetAddress address){
+	public synchronized boolean loginUser(String username, String password, Cookie cookie){
 		username = checkUserPassword(username, password);
 		if(username != null){
-			userLogin(new User(username, 604800000, address));
+			userLogin(new User(username, 604800000, cookie));
 			return true;
 		}
 		return false;
@@ -75,7 +91,7 @@ public class UserManager {
 				String user = input.readUTF();
 				String emRead = input.readUTF();
 				if(emRead.equalsIgnoreCase(email)){
-					return new User(user, 0, null);
+					return new User(user, 0, new Cookie("session", String.valueOf(random.nextLong()), 0));
 				}
 				
 				byte[] b = new byte[input.readInt()];
@@ -95,7 +111,7 @@ public class UserManager {
 			for(int i = 0; i < count; i ++){
 				String user = input.readUTF();
 				if(user.equalsIgnoreCase(username)){
-					return new User(user, 0, null);
+					return new User(user, 0, new Cookie("session", String.valueOf(random.nextLong()), 0));
 				}
 				
 				input.readUTF();
@@ -115,9 +131,9 @@ public class UserManager {
 		else
 			users.set(users.indexOf(user), user);
 	}
-	public synchronized User getUserFromAddress(InetAddress address){
+	public synchronized User getUserFromCookie(Cookie cookie){
 		for(User user : users){
-			if(user.address.equals(address)){
+			if(user.cookie.equals(cookie)){
 				return user;
 			}
 		}
