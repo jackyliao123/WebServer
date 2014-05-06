@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.util.ArrayList;
 
 import sun.awt.shell.ShellFolder;
@@ -20,18 +19,18 @@ public class PageFile extends Webpage{
 	public String getPageName(){
 		return "/file";
 	}
-	public ResponseParams getHeader(String req, String[] reqParams, String method, String postData, InetAddress address){
+	public ResponseParams getHeader(String req, String[] reqParams, String method, String postData, Cookie cookie){
 		File f = new File(root, req);
 		if(req.startsWith("/download")){
 			f = new File(root, req.replaceFirst("/download", ""));
 		}
 		if(!f.exists()){
 			String text = "The specified file was not found";
-			return new ResponseParams(getPageHeader("404 Not Found", "text/html", text.getBytes().length), text);
+			return new ResponseParams(getPageHeader("404 Not Found", "text/html", text.getBytes().length, null), text);
 		}
 		if(!f.getAbsolutePath().contains(root.getAbsolutePath())){
 			String text = "You do not have permission to access this file";
-			return new ResponseParams(getPageHeader("403 Forbidden", "text/html", text.getBytes().length), text);
+			return new ResponseParams(getPageHeader("403 Forbidden", "text/html", text.getBytes().length, null), text);
 		}
 		if(f.isDirectory()){
 			try{
@@ -57,16 +56,16 @@ public class PageFile extends Webpage{
 					}
 				}
 				body += "</div><div id=\"footer\"><div id=\"spacing\">" + dirs + " folders, " + fils + " files</div></div>";
-				String text = getPageCode(req.equals("/") ? "File Server" : req.substring(1), null, "", body, address);
-				return new ResponseParams(getPageHeader("200 OK", "text/html", text.getBytes().length), new Object[]{text});
+				String text = getPageCode(req.equals("/") ? "File Server" : req.substring(1), null, "", body, cookie);
+				return new ResponseParams(getPageHeader("200 OK", "text/html", text.getBytes().length, null), new Object[]{text});
 			}
 			catch(NullPointerException e){
 				String text = "You do not have permission to access this file";
-				return new ResponseParams(getPageHeader("403 Forbidden", "text/html", text.getBytes().length), text);
+				return new ResponseParams(getPageHeader("403 Forbidden", "text/html", text.getBytes().length, null), text);
 			}
 			catch (FileNotFoundException e){
 				String text = "The specified file was not found";
-				return new ResponseParams(getPageHeader("404 Not Found", "text/html", text.getBytes().length), text);
+				return new ResponseParams(getPageHeader("404 Not Found", "text/html", text.getBytes().length, null), text);
 			}
 		}
 		else{
@@ -83,20 +82,20 @@ public class PageFile extends Webpage{
 				}
 			}
 			if(!req.startsWith("/download")){
-				ArrayList<String> params = getPageHeader(partialContent ? "206 Partial Content" : "200 OK", MimeType.get(f.getName()), endByte - startByte + 1);
+				ArrayList<String> params = getPageHeader(partialContent ? "206 Partial Content" : "200 OK", MimeType.get(f.getName()), endByte - startByte + 1, null);
 				if(partialContent)
 					params.add("Content-Range: bytes " + startByte + "-" + endByte + "/" + f.length());
 				return new ResponseParams(params, new Object[]{f, startByte, endByte});
 			}
 			else{
-				ArrayList<String> params = getPageHeader(partialContent ? "206 Partial Content" : "200 OK", "application/octet-stream", endByte - startByte + 1);
+				ArrayList<String> params = getPageHeader(partialContent ? "206 Partial Content" : "200 OK", "application/octet-stream", endByte - startByte + 1, null);
 				if(partialContent)
 					params.add("Content-Range: bytes " + startByte + "-" + endByte + "/" + f.length());
 				return new ResponseParams(params, new Object[]{f, startByte, endByte});
 			}
 		}
 	}
-	public void writePageContent(ResponseParams param, String request, OutputStream o, InetAddress address){
+	public void writePageContent(ResponseParams param, String request, OutputStream o, Cookie cookie){
 		try {
 			Object data = param.getParam()[0];
 			if(data instanceof String){

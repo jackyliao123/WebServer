@@ -9,14 +9,14 @@ public class PageLogin extends Webpage{
 	public String getPageName(){
 		return "/login";
 	}
-	public ResponseParams getHeader(String req, String[] reqParams, String method, String postData, InetAddress address){
-		return new ResponseParams(getPageHeader(getCode(req), getContentType(req), getContentLength(req)), new Object[]{postData != null, postData});
+	public ResponseParams getHeader(String req, String[] reqParams, String method, String postData, Cookie cookie){
+		return new ResponseParams(getPageHeader(getCode(req), getContentType(req), getContentLength(req), cookie), new Object[]{postData != null, postData});
 	}
-	public void writePageContent(ResponseParams param, String request, OutputStream o, InetAddress address){
+	public void writePageContent(ResponseParams param, String request, OutputStream o, Cookie cookie){
 		UserManager manager = WebServer.instance.manager;
 		try {
 			if(request.startsWith("/logout")){
-				manager.userLogout(manager.getUserFromAddress(address));
+				manager.userLogout(manager.getUserFromCookie(cookie));
 			}
 			if((Boolean)param.getParam()[0]){
 				String userpass = URLDecoder.decode((String)param.getParam()[1], "UTF-8");
@@ -55,7 +55,7 @@ public class PageLogin extends Webpage{
 					
 					if(successful){
 						manager.registerUser(user, email, pass);
-						manager.loginUser(user, pass, address);
+						manager.loginUser(user, pass, cookie);
 						o.write(getPageCode("Registration Successful", null, "<meta http-equiv=\"refresh\" content=\"5; url=/\" />",
 								getPageContentCode(
 								"<div style=\"text-align:center\">" +
@@ -64,7 +64,7 @@ public class PageLogin extends Webpage{
 								"You will be redirected in 5 seconds<br>" +
 								"<a href=\"/\">Not redirecting? Click here</a>" +
 								"</div>"
-								), address).getBytes());
+								), cookie).getBytes());
 					}
 					else
 						o.write(getPageCode("Registration failed", null, "",
@@ -98,9 +98,9 @@ public class PageLogin extends Webpage{
 								"</td> </tr>" +
 								"</table>" +
 								"</form>"
-								), address).getBytes());
+								), cookie).getBytes());
 				} else if(request.startsWith("/changepass")){
-					User user = manager.getUserFromAddress(address);
+					User user = manager.getUserFromCookie(cookie);
 					if (user != null) {
 						String pass = userArray[0].substring(9);
 						String confirmPass = userArray[1].substring(8);
@@ -127,7 +127,7 @@ public class PageLogin extends Webpage{
 									"You will be redirected in 5 seconds<br>" +
 									"<a href=\"/\">Not redirecting? Click here</a>" +
 									"</div>"
-									), address).getBytes());
+									), cookie).getBytes());
 						} else
 							o.write(getPageCode("Change Password Failed", null, "", 
 									getPageContentCode(
@@ -152,31 +152,31 @@ public class PageLogin extends Webpage{
 									"<tr> <td>" +
 								    "<input type=\"submit\" value=\"Change Password\"/>" +
 									"</td> </tr> </table> </form>"
-									), address).getBytes());
+									), cookie).getBytes());
 					}
 				} else{
 					String user = userArray[0].substring(9);
 					String pass = userArray[1].substring(9);
 					
-					writeLoginResponseCode(o, address, user, pass, manager.loginUser(user, pass, address));
+					writeLoginResponseCode(o, cookie, user, pass, manager.loginUser(user, pass, cookie));
 				}
 			}
 			else if(request.startsWith("/register"))
-				writeRegisterCode(o, address);
+				writeRegisterCode(o, cookie);
 			else if (request.startsWith("/account")) {
-				User user = manager.getUserFromAddress(address);
+				User user = manager.getUserFromCookie(cookie);
 				if (user != null)
-					writeAccountManagementCode(o, address);
+					writeAccountManagementCode(o, cookie);
 				else
-					writeLoginPageCode(o, address);
+					writeLoginPageCode(o, cookie);
 			}
 			else
-				writeLoginPageCode(o, address);
+				writeLoginPageCode(o, cookie);
 		}
 		catch (Exception e) {
 		}
 	}
-	private void writeLoginResponseCode(OutputStream o, InetAddress address, String user, String pass, boolean wasSuccessful) throws IOException {
+	private void writeLoginResponseCode(OutputStream o, Cookie cookie, String user, String pass, boolean wasSuccessful) throws IOException {
 		if(wasSuccessful){
 			o.write(getPageCode("Login Successful", null, "<meta http-equiv=\"refresh\" content=\"5; url=/\" />",
 					getPageContentCode(
@@ -187,7 +187,7 @@ public class PageLogin extends Webpage{
 					"You will be redirected in 5 seconds<br>" +
 					"<a href=\"/\">Not redirecting? Click here</a>" +
 					"</div>"
-					), address).getBytes());
+					), cookie).getBytes());
 		}
 		else{
 			o.write(getPageCode("Login Failed", null, "",
@@ -211,10 +211,10 @@ public class PageLogin extends Webpage{
 					"</td></tr>" +
 					"</table>" +
 					"</form>"
-					), address).getBytes());
+					), cookie).getBytes());
 		}
 	}
-	private void writeRegisterCode(OutputStream o, InetAddress address) throws IOException {
+	private void writeRegisterCode(OutputStream o, Cookie cookie) throws IOException {
 		o.write(getPageCode("Register", null, "",
 				getPageContentCode(
 				"<h2 style=\"text-align:center\">Register</h2>" + 
@@ -245,9 +245,9 @@ public class PageLogin extends Webpage{
 				"</td> </tr>" +
 				"</table>" +
 				"</form>"
-				), address).getBytes());
+				), cookie).getBytes());
 	}
-	private void writeAccountManagementCode(OutputStream o, InetAddress address) throws IOException {
+	private void writeAccountManagementCode(OutputStream o, Cookie cookie) throws IOException {
 		o.write(getPageCode("Account Management", null, "", getPageContentCode(
 				"<h2 style=\"text-align:center\">Account</h2></div>" +
 				"<form style=\"padding-left:40%\" name=\"changepass\" action=\"/login/changepass\" method=\"post\">" +
@@ -269,9 +269,9 @@ public class PageLogin extends Webpage{
 				"<tr> <td>" +
 			    "<input type=\"submit\" value=\"Change Password\"/>" +
 				"</td> </tr> </table> </form>" 
-				), address).getBytes());
+				), cookie).getBytes());
 	}
-	private void writeLoginPageCode(OutputStream o, InetAddress address) throws IOException {
+	private void writeLoginPageCode(OutputStream o, Cookie cookie) throws IOException {
 		o.write(getPageCode("Login", null, "",
 				getPageContentCode(
 				"<h2 style=\"text-align:center\">Login</h2>" +
@@ -292,6 +292,6 @@ public class PageLogin extends Webpage{
 				"</td></tr>" +
 				"</table>" +
 				"</form>"
-				), address).getBytes());
+				), cookie).getBytes());
 	}
 }
