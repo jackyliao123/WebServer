@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<link href="/home.css" type="text/css" rel="stylesheet">
+		<title>Register</title>
+	</head>
+	<body>
+		?#load header.lht#?
+		<div id="indent">
+			<center>
+				<font size="5">Change Password</font>
+				<form action="/login/account/password" method="post">
+					<table style="font-weight: bold; background-color: #8080ff; text-align: right; margin-top: 0.5em;">
+						<tr><td>Old Password: </td><td><input type="text" name="old"></td><tr>
+						<tr><td>Password: </td><td><input type="password" name="password"></td><tr>
+						<tr><td>Confirm: </td><td><input type="password" name="confirm"></td><tr>
+					</table>
+					<input type="submit" value="Change">
+				</form>
+			</center>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<link href="/home.css" type="text/css" rel="stylesheet">
+		<script src="/jquery.min.js"></script>
+		<title>Login</title>
+	</head>
+	<body>
+		?#load header.lht#?
+		<div id="indent">
+			<center>
+				<font size="5">Login</font>
+				<form method="post">
+					<table style="font-weight: bold; background-color: #8080ff; text-align: right; margin-top: 0.5em;">
+						<tr><td>Username: </td><td><input type="text" name="username"></td></tr>
+						<tr><td>Password: </td><td><input type="password" name="password"></td></tr>
+					</table>
+					<input type="submit" value="Login">
+				</form>
+			</center>
+		</div>
+	</body>
+</html>

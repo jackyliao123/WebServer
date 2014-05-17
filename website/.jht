@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<link href="/home.css" type="text/css" rel="stylesheet">
+		<script src="/jquery.min.js"></script>
+		<title>Home</title>
+	</head>
+	<body class="unselectable">
+		?#load header.lht#?
+		<div id="indent" style="padding-left: 1em;">
+			//<table height="512" width = "128">
+			<img src="/cmd.png" alt="cmd"><img src="/cmd.png" alt="cmd"><img src="/cmd.png" alt="cmd"><img src="/cmd.png" alt="cmd">
+		//</table>
+		</div>
+	</body>
+</html>

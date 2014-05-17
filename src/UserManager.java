@@ -3,26 +3,15 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 
 public class UserManager {
 	private final File file;
-	public final ArrayList<User> users;
 	public UserManager(File file){
 		this.file = file;
-		users = new ArrayList<User>();
 	}
-	public synchronized void updateUsers(){
-		for(int i = 0; i < users.size(); i ++){
-			if(!users.get(i).checkValid()){
-				users.remove(i);
-				i -= 1;
-			}
-		}
-	}
-	public synchronized String checkUserPassword(String username, String password){
+	public synchronized boolean checkUserPassword(String username, String password){
 		try{
 			DataInputStream input = new DataInputStream(new FileInputStream(file));
 			boolean verified = false;
@@ -52,22 +41,14 @@ public class UserManager {
 				}
 			}
 			input.close();
-			return verified ? username : null;
+			return verified;
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
-		return null;
-	}
-	public synchronized boolean loginUser(String username, String password, InetAddress address){
-		username = checkUserPassword(username, password);
-		if(username != null){
-			userLogin(new User(username, 604800000, address));
-			return true;
-		}
 		return false;
 	}
-	public synchronized User getUserFromEmail(String email){
+	public synchronized String getUsernameFromEmail(String email){
 		try{
 			DataInputStream input = new DataInputStream(new FileInputStream(file));
 			int count = input.readInt();
@@ -75,7 +56,7 @@ public class UserManager {
 				String user = input.readUTF();
 				String emRead = input.readUTF();
 				if(emRead.equalsIgnoreCase(email)){
-					return new User(user, 0, null);
+					return user;
 				}
 				
 				byte[] b = new byte[input.readInt()];
@@ -88,14 +69,14 @@ public class UserManager {
 		}
 		return null;
 	}
-	public synchronized User getUserFromName(String username){
+	public synchronized String getUsernameFromName(String username){
 		try{
 			DataInputStream input = new DataInputStream(new FileInputStream(file));
 			int count = input.readInt();
 			for(int i = 0; i < count; i ++){
 				String user = input.readUTF();
 				if(user.equalsIgnoreCase(username)){
-					return new User(user, 0, null);
+					return user;
 				}
 				
 				input.readUTF();
@@ -108,23 +89,6 @@ public class UserManager {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	public synchronized void userLogin(User user){
-		if(!users.contains(user))
-			users.add(user);
-		else
-			users.set(users.indexOf(user), user);
-	}
-	public synchronized User getUserFromAddress(InetAddress address){
-		for(User user : users){
-			if(user.address.equals(address)){
-				return user;
-			}
-		}
-		return null;
-	}
-	public synchronized void userLogout(User user){
-		users.remove(user);
 	}
 	public synchronized void userChangePassword(String username, String newPassword){
 		try{
@@ -156,6 +120,40 @@ public class UserManager {
 					output.writeInt(pa.get(i).length);
 					output.write(pa.get(i));
 				}
+			}
+			output.close();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public synchronized void userChangeEmail(String username, String newEmail){
+		try{
+			DataInputStream input = new DataInputStream(new FileInputStream(file));
+			int userCount = input.readInt();
+			ArrayList<String> us = new ArrayList<String>();
+			ArrayList<String> em = new ArrayList<String>();
+			ArrayList<byte[]> pa = new ArrayList<byte[]>();
+			for(int i = 0; i < userCount; i ++){
+				us.add(input.readUTF());
+				em.add(input.readUTF());
+				byte[] b = new byte[input.readInt()];
+				input.readFully(b);
+				pa.add(b);
+			}
+			input.close();
+			DataOutputStream output = new DataOutputStream(new FileOutputStream(file));
+			output.writeInt(userCount);
+			for(int i = 0; i < userCount; i ++){
+				output.writeUTF(us.get(i));
+				if(us.get(i).equalsIgnoreCase(username)){
+					output.writeUTF(newEmail);
+				}
+				else{
+					output.writeUTF(em.get(i));
+				}
+				output.writeInt(pa.get(i).length);
+				output.write(pa.get(i));
 			}
 			output.close();
 		}
