@@ -7,22 +7,17 @@ body{
 }
 
 #header{
-    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     color: #ffffff;
 }
 
-.spacing{
+.header{
     padding-right: 1em;
     padding-left: 1em;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
-}
-
-#indent{
-    padding-top: 1.5em;
 }
 
 #footer{
@@ -44,7 +39,8 @@ body{
 }
 
 img{
-	padding: 4;
+	padding: 3;
+	margin: 1;
 }
 
 .spacer{

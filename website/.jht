@@ -2,13 +2,56 @@
 	<head>
 		<link href="/home.css" type="text/css" rel="stylesheet">
 		<script src="/jquery.min.js"></script>
+		<script>
+		$(document).ready(function(){
+			$("img").mouseover(function(){
+				$("img").css("background-color","#362168");
+			});
+			$("img").mouseout(function(){
+				$("img").css("background-color","transparent");
+			});
+			$("img").mousedown(function(){
+				$("img").animate({
+					marginTop: "+=2",
+					marginLeft: "+=2",
+					height: "-=4",
+					width: "-=4",
+					}, 100, function() {
+				});
+			});
+			$("img").mouseup(function(){
+				ifrm = document.createElement("IFRAME"); 
+				ifrm.setAttribute("src", '/login'); 
+				ifrm.style.width = "100%"; 
+				ifrm.style.height = "100%"; 
+				ifrm.style.border = "0";
+				ifrm.style.top = "0";
+				ifrm.style.left = "0";
+				ifrm.style.position = "fixed";
+				ifrm.style.opacity = "0";
+				//ifrm.alph
+				document.body.insertBefore(ifrm, document.body.firstChild);
+				$("iframe").animate({
+						opacity: 1
+					}, 100, function() {
+				});
+				$("img").animate({
+					marginTop: "-=2",
+					marginLeft: "-=2",
+					height: "+=4",
+					width: "+=4"
+					}, 100, function() {
+				});
+			});
+		});
+		</script>
 		<title>Home</title>
 	</head>
 	<body class="unselectable">
 		?#load header.lht#?
-		<div id="indent" style="padding-left: 1em;">
+		<div style="padding-left: 1em;">
 			//<table height="512" width = "128">
-			<img src="/cmd.png" alt="cmd"><img src="/cmd.png" alt="cmd"><img src="/cmd.png" alt="cmd"><img src="/cmd.png" alt="cmd">
+			<img name="button" src="/cmd.png" alt="cmd">
 		//</table>
 		</div>
 	</body>
