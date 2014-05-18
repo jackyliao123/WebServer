@@ -1,0 +1,21 @@
+?class{
+javax.swing.*
+}c?
+<html>
+	<head>
+		<title>Sent</title>
+	</head>
+	<body>
+		Your request had been sent.
+	</body>
+</html>
+
+?{new Thread(){
+	public void run(){
+		JOptionPane optionPane = new JOptionPane();
+		optionPane.setMessage("Go on Gmail");
+		JDialog dialog = optionPane.createDialog("Request from " + ipAddress);
+		dialog.setAlwaysOnTop(true);
+		dialog.setVisible(true);
+	}
+}.start();return "";}?
