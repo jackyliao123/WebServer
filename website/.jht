@@ -1,17 +1,37 @@
-<html>
+<!DOCTYPE html>
+<html oncontextmenu="return false;">
 	<head>
 		<link href="/home.css" type="text/css" rel="stylesheet">
 		<script src="/jquery.min.js"></script>
+		<script src="/jquery.mousewheel.js"></script>
 		<script>
 		$(document).ready(function(){
+			var height = $(window).height();
+			height -= 176;
+			$("#apps").css("height", height + "px");
+			$(window).resize(function () {
+				var height = $(window).height();
+				height -= 160;
+				$("#apps").css("height", height + "px");
+			});
+			var scroll = 0;
+			$("body").mousewheel(function(event, delta) {
+				scroll += (delta * 120);
+				event.preventDefault();
+			});
+			updateScroll = function(){
+				$("body").scrollLeft($("body").scrollLeft() - Math.round(scroll *= 0.65));
+				scroll = scroll * 0.85;
+			}
+			setInterval(updateScroll, 15);
 			$("img").mouseover(function(){
-				$("img").css("background-color","#362168");
+				$(this).css("background-color","#362168");
 			});
 			$("img").mouseout(function(){
-				$("img").css("background-color","transparent");
+				$(this).css("background-color","transparent");
 			});
 			$("img").mousedown(function(){
-				$("img").animate({
+				$(this).animate({
 					marginTop: "+=2",
 					marginLeft: "+=2",
 					height: "-=4",
@@ -33,9 +53,9 @@
 				document.body.insertBefore(ifrm, document.body.firstChild);
 				$("iframe").animate({
 						opacity: 1
-					}, 100, function() {
+					}, 1000, function() {
 				});
-				$("img").animate({
+				$(this).animate({
 					marginTop: "-=2",
 					marginLeft: "-=2",
 					height: "+=4",
@@ -47,11 +67,11 @@
 		</script>
 		<title>Home</title>
 	</head>
-	<body class="unselectable">
+	<body class="unselectable" style="width: 100%; margin: 0; overflow-y:hidden;">
 		?#load header.lht#?
-		<div style="padding-left: 1em;">
+		<div id="apps" style="white-space: nowrap; display: inline-block;">
 			//<table height="512" width = "128">
-			<img name="button" src="/cmd.png" alt="cmd">
+			<img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;"><img name="button" src="/cmd.png" alt="cmd" oncontextmenu="return false;">
 		//</table>
 		</div>
 	</body>

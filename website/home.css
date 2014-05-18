@@ -1,23 +1,26 @@
 body{
 	background-color: #180052;
-	font-family: Calibri Light;
-    font-size: 60;
+	font-family: Segoe UI Light;
+    font-size: 42pt;
     font-weight: normal;
 	cursor:default;
 }
 
-#header{
-    top: 0;
-    left: 0;
-    width: 100%;
-    color: #ffffff;
+#apps{
+	padding-left: 120px;
+	padding-top: 160px;
+	padding-right: 120px;
 }
 
 .header{
     padding-right: 1em;
-    padding-left: 1em;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+    padding-left: 120px;
+    padding-top: calc(100px - 1em);
+	position: fixed;
+	top: 0;
+    left: 0;
+    width: 100%;
+    color: #ffffff;
 }
 
 #footer{
@@ -39,8 +42,8 @@ body{
 }
 
 img{
-	padding: 3;
-	margin: 1;
+	padding: 3px;
+	margin: 1px;
 }
 
 .spacer{
